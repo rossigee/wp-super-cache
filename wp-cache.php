@@ -332,9 +332,8 @@ function wp_cache_manager_error_checks() {
 		<p><?php _e( 'It appears that mod_rewrite is not installed. Sometimes this check isn&#8217;t 100% reliable, especially if you are not using Apache. Please verify that the mod_rewrite module is loaded. It is required for serving Super Cache static files in expert mode. You will still be able to simple mode.', 'wp-super-cache' ); ?></p></div><?php
 	}
 
-	if( !is_writeable_ACLSafe( $wp_cache_config_file ) ) {
-		if ( !defined( 'SUBMITDISABLED' ) )
-			define( "SUBMITDISABLED", 'disabled style="color: #aaa" ' );
+	define( "SUBMITDISABLED", ' ' );
+	if( !is_writeable_ACLSafe( $wp_cache_config_file ) && !defined("WPCACHE_DISABLE_RO_WARNING")) {
 		?><div class="notice notice-error"><h4><?php _e( 'Read Only Mode. Configuration cannot be changed.', 'wp-super-cache' ); ?></h4>
 		<p><?php printf( __( 'The WP Super Cache configuration file is <code>%s/wp-cache-config.php</code> and cannot be modified. That file must be writeable by the web server to make any changes.', 'wp-super-cache' ), WP_CONTENT_DIR ); ?>
 		<?php _e( 'A simple way of doing that is by changing the permissions temporarily using the CHMOD command or through your ftp client. Make sure it&#8217;s globally writeable and it should be fine.', 'wp-super-cache' ); ?></p>
@@ -342,8 +341,6 @@ function wp_cache_manager_error_checks() {
 		<?php _e( 'Writeable:', 'wp-super-cache' ); ?> <code>chmod 666 <?php echo WP_CONTENT_DIR; ?>/wp-cache-config.php</code><br />
 		<?php _e( 'Read-only:', 'wp-super-cache' ); ?> <code>chmod 644 <?php echo WP_CONTENT_DIR; ?>/wp-cache-config.php</code></p>
 		</div><?php
-	} elseif ( !defined( 'SUBMITDISABLED' ) ) {
-		define( "SUBMITDISABLED", ' ' );
 	}
 
 	$valid_nonce = isset($_REQUEST['_wpnonce']) ? wp_verify_nonce($_REQUEST['_wpnonce'], 'wp-cache') : false;
